@@ -71,37 +71,44 @@ proc rmlog {swith} {
                 cd ..
             }
         }
-        puts {"(ノ≧∀≦)ノ"}
+        puts {"(^.^)"}
         puts "remove success!"
     } else {
-        puts {[・_・?]}
+        puts {"(O.O)?"}
         puts "if you want remove all 'check.log' files! \nplease make use of the command 'rmlog 0'"
     }
 }
 
-
+# 启动
 set full_dir {E:\ic_video}
 cd $full_dir
 set dir_list [lreplace [dir] -1 0]
 set missFile_list []
 foreach dir $dir_list {
-    reorde_file $dir
-    if {[file exist miss_file.log]} {
-        lappend missFile_list $dir
-        file delete miss_file.log
-        cd ..
+    if {[string match check.log $dir]} {
+        file delete check.log
     } else {
-        cd ..
+        reorde_file $dir
+        if {[file exist miss_file.log]} {
+            lappend missFile_list $dir
+            file delete miss_file.log
+            cd ..
+        } else {
+            cd ..
+        }
     }
 }
-
+# 检查结果
 cd $full_dir
 set checkRes_file [open check.log a]
-puts $checkRes_file {"ヾ(๑╹◡╹)ﾉ"}
-puts "All check finish!"
-puts $checkRes_file "All check finish!"
-puts "Have missing file of directory!"
-puts $checkRes_file "Have missing file of directory! (T＿T)"
+if {[llength $missFile_list] == 0} {
+    puts $checkRes_file {"(^o^)"}
+    puts "Pass! All check finish!"
+    puts $checkRes_file "Pass! All check finish!"
+} else {
+    puts "Failed! Have missing file of directory!"
+    puts $checkRes_file "Failed! Have missing file of directory! (O_O)"
+}
 foreach dir $missFile_list {
     puts "$dir"
     puts $checkRes_file "$dir"
