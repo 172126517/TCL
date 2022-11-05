@@ -100,7 +100,7 @@ foreach {startpoint endpoint slack endpoint_clock_pin points} $timing_paths_GROU
                 }
                 # Fix next path
                 if {$next_salck < 0} {
-                    proc_fix_next_path $next_slack
+                    proc_fix_next_path
                 }
             } else {
                 #*************************************************************#
@@ -127,7 +127,7 @@ foreach {startpoint endpoint slack endpoint_clock_pin points} $timing_paths_GROU
                 }
                 # Fix next path
                 if {$next_salck < 0} {
-                    proc_fix_next_path $next_slack
+                    proc_fix_next_path
                 }
             }
         }

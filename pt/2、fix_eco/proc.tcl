@@ -79,7 +79,7 @@ proc proc_get_points_RVT {points} {
     pust "## The number of RVT gor data path:[llength $points_RVT]"
 }
 
-proc proc_fix_next_path {next_slack} {
+proc proc_fix_next_path {} {
     puts "## Beginning fix setup of the next path."
     set from $::endpoint
     set next_slack [get_attribute [get_timing_path -from $from] slack]
@@ -87,14 +87,14 @@ proc proc_fix_next_path {next_slack} {
     while { $next_slack < 0 } {
         # 'proc_get_timing_paths_NEXT' get a list --> 'timing_paths_NEXT'
         proc_get_timing_paths_NEXT $from
-        foreach {startpoint endpoint slack endpoint_clock_pin points} $timing_paths_NEXT {
+        foreach {startpoint endpoint slack endpoint_clock_pin points} $::timing_paths_NEXT {
             # 'proc_get_points_RVT' get a list --> 'points_RVT'
             proc_get_points_RVT $points
-            if {[llength $points_RVT] > 0} {
+            if {[llength $::points_RVT] > 0} {
                 puts "## The data path have margin of the next path."
                 # Size cell RVT --> LVT
                 set fixed_slack $slack 
-                foreach {insts cell_refname} $points_RVT {
+                foreach {insts cell_refname} $::points_RVT {
                     if {$fixed_slack < 0} {
                         proc_size_cell_VT $insts $cell_refname
                         set fixed_slack [get_attribute [get_timing_path -from $startpoint -through $insts -to endpoint] slack]
@@ -107,6 +107,9 @@ proc proc_fix_next_path {next_slack} {
         }
         set next_slack [get_attribute [get_timing_path -from $from] slack]
         puts "The slack of next path:$next_slack"   
+        if { $next_slack == $slack } {
+            break
+        }
     }
     puts "## End of fixed the next path!"
 }
